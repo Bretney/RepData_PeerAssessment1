@@ -1,12 +1,4 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
-
-
-## Loading and preprocessing the data
+## setting the directory
 setwd("~/repdata-data-activity")
 data <- read.csv("activity.csv")
 str(data)
@@ -15,21 +7,22 @@ attach(data)
 totalPerDay <- tapply(steps,list(date),sum)
 detach(data)
 
-
-## What is mean total number of steps taken per day?
+## setting the environment
 library(knitr) 
+library(gridExtra) 
 library(ggplot2) 
 library(plyr) 
 library(dplyr)
 opts_chunk$set(echo = TRUE)
+
+## Finding TotalPerDay and the Median/Mean Per Day
+hist(totalPerDay,breaks=10)
 meanPerDay = mean(totalPerDay,na.rm = TRUE)
 meanPerDay
 
 medianPerDay <- median(totalPerDay,na.rm = TRUE)
 medianPerDay
-
-
-## What is the average daily activity pattern?
+-----------------------------------
 attach(data)
 meanEvery5min <- tapply(steps,list(interval),mean,na.rm=TRUE)
 detach(data)
@@ -41,8 +34,7 @@ meanEvery5min[104]
 
 max(meanEvery5min)
 
-
-## Imputing missing values
+--------------------------------------------
 calMissing <- sum(is.na(data$steps))
 calMissing
 
@@ -87,13 +79,8 @@ daytypeDiff <- aggregate(imputedSteps, list(interval,isweekday), mean)
 detach(data)
 library(lattice)
 
-
-## Are there differences in activity patterns between weekdays and weekends?
-daytypeDiff <- aggregate(imputedSteps, list(interval,isweekday), mean)
-detach(data)
-library(lattice)
-
-
+-------------------------------------------------
+  
 xyplot(x ~ Group.1|Group.2,data=daytypeDiff,type="l",layout=c(1,2),xlab="Interval",ylab="Number of Steps")
 
 ggplot(data_weekdays, aes(x=interval, y=steps)) + 
